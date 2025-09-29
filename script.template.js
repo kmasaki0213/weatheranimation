@@ -180,11 +180,11 @@ function createCloud(size = 'medium', speed = 'medium') {
     const cloud = document.createElement('div');
     cloud.className = 'cloud';
 
-    // サイズ設定
+    // サイズ設定（派手版）
     const sizes = {
-        small: { width: 60, height: 30 },
-        medium: { width: 100, height: 50 },
-        large: { width: 140, height: 70 }
+        small: { width: 120, height: 60 },
+        medium: { width: 180, height: 90 },
+        large: { width: 240, height: 120 }
     };
 
     const cloudSize = sizes[size] || sizes.medium;
@@ -219,11 +219,11 @@ function createSunray(intensity = 'medium') {
     const sunray = document.createElement('div');
     sunray.className = 'sunray';
 
-    // 強度に応じたサイズと位置
+    // 強度に応じたサイズと位置（控えめ版）
     const sizes = {
-        gentle: { width: 8, height: 8 },
-        medium: { width: 12, height: 12 },
-        strong: { width: 18, height: 18 }
+        gentle: { width: 10, height: 10 },
+        medium: { width: 16, height: 16 },
+        strong: { width: 24, height: 24 }
     };
 
     const raySize = sizes[intensity] || sizes.medium;
@@ -267,9 +267,9 @@ function startRainAnimation(intensity = 'medium') {
 
     isRaining = true;
     const frequencies = {
-        light: { count: 2, interval: 200 },
-        medium: { count: 3, interval: 150 },
-        heavy: { count: 5, interval: 100 }
+        light: { count: 4, interval: 120 },
+        medium: { count: 6, interval: 80 },
+        heavy: { count: 10, interval: 50 }
     };
 
     const config = frequencies[intensity] || frequencies.medium;
@@ -287,9 +287,9 @@ function startCloudAnimation(density = 'medium', speed = 'medium') {
 
     isCloudy = true;
     const densities = {
-        light: { count: 1, interval: 8000 },
-        medium: { count: 1, interval: 5000 },
-        dense: { count: 2, interval: 3000 }
+        light: { count: 2, interval: 4000 },
+        medium: { count: 3, interval: 2500 },
+        dense: { count: 4, interval: 1500 }
     };
 
     const config = densities[density] || densities.medium;
@@ -310,9 +310,9 @@ function startSunshineAnimation(intensity = 'medium') {
 
     isSunny = true;
     const intensities = {
-        gentle: { count: 2, interval: 1500 },
-        medium: { count: 3, interval: 1000 },
-        strong: { count: 5, interval: 600 }
+        gentle: { count: 2, interval: 1200 },
+        medium: { count: 3, interval: 800 },
+        strong: { count: 5, interval: 500 }
     };
 
     const config = intensities[intensity] || intensities.medium;
