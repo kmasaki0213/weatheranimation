@@ -30,13 +30,8 @@ async function getWeatherData(lat, lon) {
     try {
         // デモ用のデータ（実際にはAPI_KEYが必要）
         if (API_KEY === 'デモ用のAPIキー' || API_KEY === '' || API_KEY === '{{OPENWEATHER_API_KEY}}') {
-            // デモ用の天気データを返す
-            return {
-                name: "東京",
-                weather: [{ main: "Rain", description: "小雨" }],
-                main: { temp: 18.5, humidity: 75 },
-                wind: { speed: 3.2 }
-            };
+            // 座標に基づいたデモ用の天気データを返す
+            return generateDemoWeatherByLocation(lat, lon);
         }
 
         const apiUrl = `${API_BASE_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=ja`;
@@ -129,6 +124,91 @@ function getSunIntensity(temperature) {
     if (temperature > 25) return 'strong';
     if (temperature > 15) return 'medium';
     return 'gentle';
+}
+
+// 座標に基づいたデモ天気データを生成する関数
+function generateDemoWeatherByLocation(lat, lon) {
+    // 座標に基づいて地域名を決定
+    const locationName = getLocationName(lat, lon);
+
+    // 座標値を使って疑似ランダムな天気を生成
+    const latHash = Math.abs(Math.floor(lat * 100)) % 4;
+    const lonHash = Math.abs(Math.floor(lon * 100)) % 3;
+    const weatherSeed = (latHash + lonHash) % 4;
+
+    const weatherPatterns = [
+        {
+            main: "Clear",
+            description: "快晴",
+            temp: 22 + (lat / 10),
+            humidity: 45 + (lonHash * 10),
+            windSpeed: 2.1 + (latHash * 0.5)
+        },
+        {
+            main: "Clouds",
+            description: "曇り",
+            temp: 18 + (lon / 20),
+            humidity: 70 + (latHash * 5),
+            windSpeed: 3.2 + (lonHash * 0.8)
+        },
+        {
+            main: "Rain",
+            description: "小雨",
+            temp: 15 + (lat / 15),
+            humidity: 80 + (lonHash * 3),
+            windSpeed: 4.5 + (latHash * 0.6)
+        },
+        {
+            main: "Rain",
+            description: "大雨",
+            temp: 16 + (lon / 25),
+            humidity: 85 + (latHash * 2),
+            windSpeed: 6.8 + (lonHash * 1.2)
+        }
+    ];
+
+    const weather = weatherPatterns[weatherSeed];
+
+    return {
+        name: locationName,
+        weather: [{ main: weather.main, description: weather.description }],
+        main: {
+            temp: Math.round(weather.temp * 10) / 10,
+            humidity: Math.min(95, Math.max(30, Math.round(weather.humidity)))
+        },
+        wind: { speed: Math.round(weather.windSpeed * 10) / 10 }
+    };
+}
+
+// 座標から地域名を推定する関数
+function getLocationName(lat, lon) {
+    // 日本の主要都市の座標範囲で判定
+    if (lat >= 35.6 && lat <= 35.8 && lon >= 139.6 && lon <= 139.8) {
+        return "東京";
+    } else if (lat >= 34.6 && lat <= 34.8 && lon >= 135.4 && lon <= 135.6) {
+        return "大阪";
+    } else if (lat >= 35.0 && lat <= 35.2 && lon >= 135.7 && lon <= 135.9) {
+        return "京都";
+    } else if (lat >= 35.4 && lat <= 35.6 && lon >= 139.6 && lon <= 139.8) {
+        return "横浜";
+    } else if (lat >= 43.0 && lat <= 43.2 && lon >= 141.3 && lon <= 141.5) {
+        return "札幌";
+    } else if (lat >= 26.1 && lat <= 26.3 && lon >= 127.6 && lon <= 127.8) {
+        return "那覇";
+    } else if (lat >= 33.5 && lat <= 33.7 && lon >= 130.3 && lon <= 130.5) {
+        return "福岡";
+    } else if (lat >= 38.2 && lat <= 38.4 && lon >= 140.8 && lon <= 141.0) {
+        return "仙台";
+    } else if (lat >= 36.3 && lat <= 36.5 && lon >= 136.6 && lon <= 136.8) {
+        return "金沢";
+    } else if (lat >= 34.3 && lat <= 34.5 && lon >= 132.4 && lon <= 132.6) {
+        return "広島";
+    } else {
+        // 座標から大まかな地域を生成
+        const regions = ["北部地域", "南部地域", "東部地域", "西部地域", "中央地域", "沿岸地域", "山間地域"];
+        const regionIndex = (Math.abs(Math.floor(lat + lon)) % regions.length);
+        return regions[regionIndex];
+    }
 }
 
 // 位置情報を取得する関数
