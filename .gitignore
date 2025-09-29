@@ -1,0 +1,11 @@
+# 開発用ファイル（APIキーが含まれている）
+script.js
+
+# その他の不要ファイル
+.DS_Store
+.ruby-lsp/
+hello.rb
+
+# ローカル設定
+.env
+*.log

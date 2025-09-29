@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天気予報と雨粒アニメーション</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>現在の天気</h1>
+        <div class="weather-info">
+            <div id="location">位置情報を取得中...</div>
+            <div id="weather-description">天気情報を読み込み中...</div>
+            <div id="temperature">--°C</div>
+            <div id="humidity">湿度: --%</div>
+            <div id="wind-speed">風速: -- m/s</div>
+        </div>
+        <button id="get-weather">天気を更新</button>
+    </div>
+
+    <!-- 雨粒アニメーション用のコンテナ -->
+    <div id="rain-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
