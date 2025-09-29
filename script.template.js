@@ -28,19 +28,25 @@ let isSunny = false;
 // 天気データを取得する関数
 async function getWeatherData(lat, lon) {
     try {
+        console.log(`🌍 天気データ取得開始:`, { lat: lat, lon: lon });
+
         // デモ用のデータ（実際にはAPI_KEYが必要）
         if (API_KEY === 'デモ用のAPIキー' || API_KEY === '' || API_KEY === '{{OPENWEATHER_API_KEY}}') {
+            console.log('📝 デモモード: APIキーが設定されていないため、疑似データを生成');
             // 座標に基づいたデモ用の天気データを返す
-            return generateDemoWeatherByLocation(lat, lon);
+            const demoData = generateDemoWeatherByLocation(lat, lon);
+            console.log('📦 生成されたデモデータ:', demoData);
+            return demoData;
         }
 
         const apiUrl = `${API_BASE_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=ja`;
-        console.log('API リクエスト URL:', apiUrl.replace(API_KEY, 'xxxxxx')); // APIキーを隠してログ出力
+        console.log('🌐 実際のAPI呼び出し URL:', apiUrl.replace(API_KEY, 'xxxxxx')); // APIキーを隠してログ出力
 
         const response = await fetch(apiUrl);
+        console.log('📡 APIレスポンス受信:', response.status, response.statusText);
 
         if (!response.ok) {
-            console.error('API レスポンス:', response.status, response.statusText);
+            console.error('❌ API レスポンスエラー:', response.status, response.statusText);
 
             if (response.status === 401) {
                 throw new Error('APIキーが無効または未認証です。APIキーの有効化をお待ちください（最大2時間）');
@@ -53,21 +59,26 @@ async function getWeatherData(lat, lon) {
             }
         }
 
-        return await response.json();
+        const weatherData = await response.json();
+        console.log('✅ API天気データ取得成功:', weatherData);
+        return weatherData;
     } catch (error) {
-        console.error('天気データの取得に失敗しました:', error);
+        console.error('❌ 天気データの取得に失敗しました:', error);
         throw error;
     }
 }
 
 // 天気情報を表示する関数
 function displayWeather(data) {
+    console.log('🎨 天気情報をUIに表示:', data);
+
     locationElement.textContent = data.name;
     weatherDescElement.textContent = data.weather[0].description;
     temperatureElement.textContent = `${Math.round(data.main.temp)}°C`;
     humidityElement.textContent = `湿度: ${data.main.humidity}%`;
     windSpeedElement.textContent = `風速: ${data.wind.speed} m/s`;
 
+    console.log('🌈 アニメーション制御開始');
     // 天気に応じたアニメーション制御
     controlWeatherAnimations(data);
 }
@@ -128,13 +139,17 @@ function getSunIntensity(temperature) {
 
 // 座標に基づいたデモ天気データを生成する関数
 function generateDemoWeatherByLocation(lat, lon) {
+    console.log('🎲 座標に基づくデモ天気データ生成開始:', { lat, lon });
+
     // 座標に基づいて地域名を決定
     const locationName = getLocationName(lat, lon);
+    console.log('📍 地域名決定:', locationName);
 
     // 座標値を使って疑似ランダムな天気を生成
     const latHash = Math.abs(Math.floor(lat * 100)) % 4;
     const lonHash = Math.abs(Math.floor(lon * 100)) % 3;
     const weatherSeed = (latHash + lonHash) % 4;
+    console.log('🎯 天気パターン計算:', { latHash, lonHash, weatherSeed });
 
     const weatherPatterns = [
         {
@@ -168,8 +183,9 @@ function generateDemoWeatherByLocation(lat, lon) {
     ];
 
     const weather = weatherPatterns[weatherSeed];
+    console.log('☁️ 選択された天気パターン:', weather);
 
-    return {
+    const result = {
         name: locationName,
         weather: [{ main: weather.main, description: weather.description }],
         main: {
@@ -178,6 +194,9 @@ function generateDemoWeatherByLocation(lat, lon) {
         },
         wind: { speed: Math.round(weather.windSpeed * 10) / 10 }
     };
+
+    console.log('✨ 最終的なデモ天気データ:', result);
+    return result;
 }
 
 // 座標から地域名を推定する関数
@@ -528,9 +547,13 @@ function initMap() {
         const lat = e.latlng.lat;
         const lng = e.latlng.lng;
 
+        console.log('🗺️ 地図がクリックされました:', { 緯度: lat, 経度: lng });
+
         try {
             // 選択した場所の天気情報を取得
+            console.log('⏳ 天気データ取得を開始...');
             const weatherData = await getWeatherData(lat, lng);
+            console.log('✅ 天気データ取得完了、UIを更新します');
             displayWeather(weatherData);
 
             // 既存のマーカーを削除
@@ -547,6 +570,7 @@ function initMap() {
             else if (weather.includes('snow')) icon = '❄️';
 
             // 新しいマーカーを追加
+            console.log('📍 地図にマーカーを追加:', { icon: icon, location: weatherData.name });
             currentMarker = L.marker([lat, lng]).addTo(map)
                 .bindPopup(`
                     <div style="text-align: center;">
@@ -558,8 +582,9 @@ function initMap() {
                     </div>
                 `)
                 .openPopup();
+            console.log('✅ マーカー追加とポップアップ表示完了');
         } catch (error) {
-            console.error('天気データの取得に失敗しました:', error);
+            console.error('❌ 地図クリック処理でエラーが発生:', error);
         }
     });
 }
