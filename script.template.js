@@ -389,12 +389,65 @@ async function updateWeather() {
     }
 }
 
+// デモ用サンプルデータ
+const demoWeatherData = {
+    sunny: {
+        name: "デモ（晴れ）",
+        weather: [{ main: "Clear", description: "快晴" }],
+        main: { temp: 28, humidity: 45 },
+        wind: { speed: 2.1 }
+    },
+    cloudy: {
+        name: "デモ（曇り）",
+        weather: [{ main: "Clouds", description: "曇り" }],
+        main: { temp: 22, humidity: 70 },
+        wind: { speed: 4.5 }
+    },
+    lightRain: {
+        name: "デモ（小雨）",
+        weather: [{ main: "Rain", description: "小雨" }],
+        main: { temp: 18, humidity: 65 },
+        wind: { speed: 3.2 }
+    },
+    heavyRain: {
+        name: "デモ（大雨）",
+        weather: [{ main: "Rain", description: "大雨" }],
+        main: { temp: 16, humidity: 85 },
+        wind: { speed: 7.8 }
+    }
+};
+
+// デモモード用関数
+function showDemoWeather(weatherType) {
+    const data = demoWeatherData[weatherType];
+    if (data) {
+        displayWeather(data);
+        console.log(`🎭 デモモード: ${data.name} を表示中`);
+    }
+}
+
 // イベントリスナーの設定
 getWeatherButton.addEventListener('click', updateWeather);
 
-// ページ読み込み時に天気情報を取得
+// ページ読み込み時の処理
 document.addEventListener('DOMContentLoaded', () => {
+    // 実際の天気情報を取得
     updateWeather();
+
+    // デモボタンのイベントリスナー設定
+    const demoButtons = document.querySelectorAll('.demo-btn');
+    demoButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const weatherType = button.getAttribute('data-weather');
+            const weatherMap = {
+                'sunny': 'sunny',
+                'cloudy': 'cloudy',
+                'light-rain': 'lightRain',
+                'heavy-rain': 'heavyRain'
+            };
+            showDemoWeather(weatherMap[weatherType]);
+        });
+    });
 });
 
 // APIキーのテスト関数

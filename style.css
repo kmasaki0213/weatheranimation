@@ -77,6 +77,65 @@ h1 {
     box-shadow: 0 8px 25px rgba(9, 132, 227, 0.4);
 }
 
+/* デモコントロール */
+.demo-controls {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.demo-controls h3 {
+    color: #2d3436;
+    margin: 0 0 15px 0;
+    font-size: 1.1em;
+}
+
+.demo-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.demo-btn {
+    background: linear-gradient(45deg, #74b9ff, #0984e3);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(9, 132, 227, 0.2);
+}
+
+.demo-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(9, 132, 227, 0.3);
+}
+
+.demo-btn:active {
+    transform: translateY(0);
+}
+
+.demo-btn[data-weather="sunny"] {
+    background: linear-gradient(45deg, #ffeaa7, #fdcb6e);
+}
+
+.demo-btn[data-weather="cloudy"] {
+    background: linear-gradient(45deg, #ddd, #bbb);
+    color: #2d3436;
+}
+
+.demo-btn[data-weather="light-rain"] {
+    background: linear-gradient(45deg, #81ecec, #00cec9);
+}
+
+.demo-btn[data-weather="heavy-rain"] {
+    background: linear-gradient(45deg, #74b9ff, #0984e3);
+}
+
 /* 天気エフェクトコンテナ */
 #rain-container {
     position: fixed;
