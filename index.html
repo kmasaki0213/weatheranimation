@@ -4,29 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>天気予報と雨粒アニメーション</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>現在の天気</h1>
-        <div class="weather-info">
-            <div id="location">位置情報を取得中...</div>
-            <div id="weather-description">天気情報を読み込み中...</div>
-            <div id="temperature">--°C</div>
-            <div id="humidity">湿度: --%</div>
-            <div id="wind-speed">風速: -- m/s</div>
-        </div>
-        <button id="get-weather">天気を更新</button>
+    <div class="app-container">
+        <!-- 左側：天気情報 -->
+        <div class="weather-panel">
+            <div class="container">
+                <h1>🌤️ 天気予報</h1>
+                <div class="weather-info">
+                    <div id="location">位置情報を取得中...</div>
+                    <div id="weather-description">天気情報を読み込み中...</div>
+                    <div id="temperature">--°C</div>
+                    <div id="humidity">湿度: --%</div>
+                    <div id="wind-speed">風速: -- m/s</div>
+                </div>
+                <button id="get-weather">現在地の天気を取得</button>
 
-        <!-- デモモードボタン -->
-        <div class="demo-controls">
-            <h3>🎭 アニメーションデモ</h3>
-            <div class="demo-buttons">
-                <button class="demo-btn" data-weather="sunny">☀️ 晴れ</button>
-                <button class="demo-btn" data-weather="cloudy">☁️ 曇り</button>
-                <button class="demo-btn" data-weather="light-rain">🌦️ 小雨</button>
-                <button class="demo-btn" data-weather="heavy-rain">🌧️ 大雨</button>
+                <!-- デモモードボタン -->
+                <div class="demo-controls">
+                    <h3>🎭 アニメーションデモ</h3>
+                    <div class="demo-buttons">
+                        <button class="demo-btn" data-weather="sunny">☀️ 晴れ</button>
+                        <button class="demo-btn" data-weather="cloudy">☁️ 曇り</button>
+                        <button class="demo-btn" data-weather="light-rain">🌦️ 小雨</button>
+                        <button class="demo-btn" data-weather="heavy-rain">🌧️ 大雨</button>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <!-- 右側：地図 -->
+        <div class="map-panel">
+            <div class="map-header">
+                <h2>🗺️ 地図で天気をチェック</h2>
+                <p>地図をクリックしてその場所の天気を確認！</p>
+            </div>
+            <div id="map"></div>
         </div>
     </div>
 
@@ -35,6 +50,7 @@
     <div id="clouds-container"></div>
     <div id="sunshine-container"></div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

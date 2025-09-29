@@ -13,6 +13,10 @@ const rainContainer = document.getElementById('rain-container');
 const cloudsContainer = document.getElementById('clouds-container');
 const sunshineContainer = document.getElementById('sunshine-container');
 
+// 地図関連の変数
+let map;
+let currentMarker;
+
 // 天気エフェクト関連
 let rainInterval;
 let cloudInterval;
@@ -429,8 +433,62 @@ function showDemoWeather(weatherType) {
 // イベントリスナーの設定
 getWeatherButton.addEventListener('click', updateWeather);
 
+// 地図を初期化する関数
+function initMap() {
+    // 東京を中心とした地図を作成
+    map = L.map('map').setView([35.6762, 139.6503], 10);
+
+    // OpenStreetMapのタイルを追加
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // 地図クリックイベントリスナー
+    map.on('click', async function(e) {
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+
+        try {
+            // 選択した場所の天気情報を取得
+            const weatherData = await getWeatherData(lat, lng);
+            displayWeather(weatherData);
+
+            // 既存のマーカーを削除
+            if (currentMarker) {
+                map.removeLayer(currentMarker);
+            }
+
+            // 天気に応じたアイコンを決定
+            const weather = weatherData.weather[0].main.toLowerCase();
+            let icon = '🌤️';
+            if (weather.includes('rain')) icon = '🌧️';
+            else if (weather.includes('cloud')) icon = '☁️';
+            else if (weather.includes('clear')) icon = '☀️';
+            else if (weather.includes('snow')) icon = '❄️';
+
+            // 新しいマーカーを追加
+            currentMarker = L.marker([lat, lng]).addTo(map)
+                .bindPopup(`
+                    <div style="text-align: center;">
+                        <strong>${weatherData.name}</strong><br>
+                        ${icon} ${weatherData.weather[0].description}<br>
+                        🌡️ ${Math.round(weatherData.main.temp)}°C<br>
+                        💧 湿度: ${weatherData.main.humidity}%<br>
+                        💨 風速: ${weatherData.wind.speed} m/s
+                    </div>
+                `)
+                .openPopup();
+        } catch (error) {
+            console.error('天気データの取得に失敗しました:', error);
+        }
+    });
+}
+
 // ページ読み込み時の処理
 document.addEventListener('DOMContentLoaded', () => {
+    // 地図を初期化
+    initMap();
+
     // 実際の天気情報を取得
     updateWeather();
 
