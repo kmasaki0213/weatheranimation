@@ -28,7 +28,7 @@ jobs:
     - name: Build site
       run: |
         # APIキーをテンプレートに注入
-        sed "s/{{OPENWEATHER_API_KEY}}/${{ secrets.OPENWEATHER_API_KEY }}/g" script.template.js > script.js
+        sed "s/PLACEHOLDER_API_KEY/${{ secrets.OPENWEATHER_API_KEY }}/g" script.template.js > script.js
 
         # ビルド結果を確認（APIキーは表示しない）
         echo "✅ APIキーが正常に注入されました"
