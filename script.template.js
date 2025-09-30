@@ -31,7 +31,7 @@ async function getWeatherData(lat, lon) {
         console.log(`🌍 天気データ取得開始:`, { lat: lat, lon: lon });
 
         // デモ用のデータ（実際にはAPI_KEYが必要）
-        if (API_KEY === 'デモ用のAPIキー' || API_KEY === '' || API_KEY === '{{OPENWEATHER_API_KEY}}') {
+        if (!API_KEY || API_KEY === '' || API_KEY === '{{OPENWEATHER_API_KEY}}') {
             console.log('📝 デモモード: APIキーが設定されていないため、疑似データを生成');
             // 座標に基づいたデモ用の天気データを返す
             const demoData = generateDemoWeatherByLocation(lat, lon);
@@ -643,6 +643,6 @@ APIキー: ${API_KEY ? (API_KEY === '{{OPENWEATHER_API_KEY}}' ? 'テンプレー
 `);
 
 // APIキーの有効性をテスト
-if (API_KEY && API_KEY !== 'デモ用のAPIキー' && API_KEY !== '{{OPENWEATHER_API_KEY}}') {
+if (API_KEY && API_KEY !== '{{OPENWEATHER_API_KEY}}') {
     testAPIKey();
 }
